@@ -1,0 +1,105 @@
+
+service: sls-demo
+
+# creating table
+custom:
+  dynamodb:
+    stages:
+      - dev
+    start:
+      port: 8000
+      migrate: true # please create the tables defined in the resources
+      inMemory: true
+      onStart: true
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: us-east-1
+  environment:
+    JOBS_TABLE: ${self:service}-${self:opt, self:provider.stage}-jobs
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "*"
+
+
+plugins:
+  - serverless-offline
+  - serverless-dynamodb-local
+
+functions:
+
+  hello:
+    handler: handler.hello
+
+  jobs:
+    handler: src/jobs/handler.handler
+
+  listJobs:
+    handler: src/jobs/list.handler
+    events:
+      - http: # event for the Serverless options
+          method: GET # HTTP Verb
+          path: /jobs # endpoint
+
+  createJob:
+    handler: src/jobs/create.handler
+    events:
+      - http: # event for the Serverless options
+          method: POST # HTTP Verb
+          path: /jobs # endpoint
+
+  getJob:
+    handler: src/jobs/findOne.handler
+    events:
+      - http: # event for the Serverless options
+          method: GET # HTTP Verb
+          path: /jobs/{id} # endpoint
+          request:
+            parameters:
+              id: true
+
+  deleteJob:
+    handler: src/jobs/delete.handler
+    events:
+      - http: # event for the Serverless options
+          method: DELETE # HTTP Verb
+          path: /jobs/{id} # endpoint
+          request:
+            parameters:
+              id: true
+
+  updateJob:
+    handler: src/jobs/update.handler
+    events:
+      - http: # event for the Serverless options
+          method: PUT # HTTP Verb
+          path: /jobs/{id} # endpoint
+          request:
+            parameters:
+              id: true
+
+# you can add DynamoDB resource templates here
+
+resources:
+  Resources:
+    JobsDynamoDBTable:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+        TableName: ${self:provider.environment.JOBS_TABLE}
+        AttributeDefinitions:
+          - AttributeName: id # as primary key
+            AttributeType: S # data type String
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1

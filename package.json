@@ -1,0 +1,21 @@
+{
+  "name": "serverless-demo",
+  "version": "1.0.0",
+  "description": "Serverless Framework Demo Project",
+  "main": "handler.js",
+  "scripts": {
+    "dev": "sls offline start",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dynamodb:start": "sls dynamodb start --port 8082"
+  },
+  "author": "David E lares S <david.e.lares@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "serverless-offline": "^6.4.0"
+  },
+  "dependencies": {
+    "joi": "^14.3.1",
+    "serverless-dynamodb-local": "^0.2.35",
+    "uuid": "^8.1.0"
+  }
+}
