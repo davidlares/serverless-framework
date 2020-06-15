@@ -32,8 +32,6 @@ Just: `npm run dev`.
 
 Simple, just `sls deploy` (you can use `sls` or also use `serverless`).
 
-![Setup](https://anonymousfiles.io/f/sls.png "Test")
-
 ## Credits
 
  - [David E Lares](https://twitter.com/davidlares3)
