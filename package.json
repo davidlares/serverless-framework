@@ -11,7 +11,7 @@
   "author": "David E lares S <david.e.lares@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "serverless-offline": "^6.4.0"
+    "serverless-offline": "^12.0.3"
   },
   "dependencies": {
     "joi": "^14.3.1",
